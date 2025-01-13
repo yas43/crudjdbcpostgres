@@ -19,8 +19,13 @@ public class FormLoginService {
         return formLoginDAO.addFormLogin(formLogin);
     }
 
-    public boolean isUserExist(Integer id) {
-        return formLoginDAO.isUserExist(id);
+    public FormLogin findById(Integer id) {
+//        return formLoginDAO.findById(id) != null;
+        return formLoginDAO.findById(id);
+    }
+
+    public FormLogin findByEmail(String email) {
+        return formLoginDAO.findByEmail(email);
     }
 
     public FormLogin displayUserById(Integer id) {
@@ -28,9 +33,13 @@ public class FormLoginService {
     }
 
     public FormLogin updateUser(FormLogin formLogin) {
-        if (formLoginDAO.isUserExist(formLogin.getId())) {
+        if (isUserExist(formLogin.getId())) {
          return formLoginDAO.updateUser(formLogin);
         }else throw new RuntimeException("user not founded");
+    }
+
+    private boolean isUserExist(Integer id) {
+        return findById(id) != null;
     }
 
     public List<FormLogin> displayAllUser() {

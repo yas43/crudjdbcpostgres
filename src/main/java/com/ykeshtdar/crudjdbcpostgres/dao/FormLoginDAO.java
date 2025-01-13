@@ -10,31 +10,62 @@ import java.util.*;
 @Component
 public class FormLoginDAO {
     DatabaseConfig databaseConfig = new DatabaseConfig();
-    DBConstant dbConstant = new DBConstant();
-    public boolean isUserExist(Integer id){
-        Connection con = databaseConfig.getConnection();
+
+    public FormLogin findById(Integer id){
+        Connection con = null;
+        FormLogin formLogin = new FormLogin();
         try {
             con = databaseConfig.getConnection();
-            PreparedStatement ps = con.prepareStatement(dbConstant.GET_USER_By_ID);
+            PreparedStatement ps = con.prepareStatement(DBConstant.GET_USER_By_ID);
             ps.setInt(1,id);
             ps.execute();
             ResultSet rs = ps.executeQuery();
-            return rs.next();
+            while (rs.next()){
+                formLogin.setId(rs.getInt(1));
+                formLogin.setEmail(rs.getString(2));
+                formLogin.setPassword(rs.getString(3));
+            }
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return false;
+
         }finally {
             databaseConfig.closeConnection(con);
         }
+        return formLogin;
+    }
 
+
+    public FormLogin findByEmail(String email){
+        Connection con = null;
+        FormLogin formLogin = new FormLogin();
+        try {
+            con = databaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstant.GET_USER_By_EMAIL);
+            ps.setString(1,email);
+            ps.execute();
+            ResultSet rs = ps.executeQuery();
+//            return rs.next();
+            while (rs.next()){
+                formLogin.setId(rs.getInt(1));
+                formLogin.setEmail(rs.getString(2));
+                formLogin.setPassword(rs.getString(3));
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+
+        }finally {
+            databaseConfig.closeConnection(con);
+        }
+        return formLogin;
     }
 
     public FormLogin addFormLogin(FormLogin formLogin) {
         Connection conn = databaseConfig.getConnection();
         FormLogin formLogin1 = new FormLogin();
         try {
-            PreparedStatement ps = conn.prepareStatement(dbConstant.ADD_USER);
+            PreparedStatement ps = conn.prepareStatement(DBConstant.ADD_USER);
             ps.setString(1,formLogin.getEmail());
             ps.setString(2, formLogin.getPassword());
 //            ps.executeUpdate();
@@ -57,7 +88,7 @@ public class FormLoginDAO {
     public void initialDatabaseTable(){
         Connection con = databaseConfig.getConnection();
         try {
-            PreparedStatement ps = con.prepareStatement(dbConstant.initialDatabase);
+            PreparedStatement ps = con.prepareStatement(DBConstant.initialDatabase);
             ps.executeQuery();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -71,7 +102,7 @@ public class FormLoginDAO {
         Connection con = databaseConfig.getConnection();
         FormLogin formLogin = new FormLogin();
         try {
-            PreparedStatement ps = con.prepareStatement(dbConstant.DISPLAY_USER);
+            PreparedStatement ps = con.prepareStatement(DBConstant.DISPLAY_USER);
             ps.setInt(1,id);
            ResultSet rs =  ps.executeQuery();
             while (rs.next()){
@@ -91,7 +122,7 @@ public class FormLoginDAO {
         Connection con = databaseConfig.getConnection();
         FormLogin formLogin1 = new FormLogin();
         try {
-            PreparedStatement ps = con.prepareStatement(dbConstant.UPDATE_USER);
+            PreparedStatement ps = con.prepareStatement(DBConstant.UPDATE_USER);
             ps.setString(1,formLogin.getEmail());
             ps.setString(2,formLogin.getPassword());
             ps.setInt(3,formLogin.getId());
@@ -114,7 +145,7 @@ public class FormLoginDAO {
 //        FormLogin formLogin = new FormLogin();
         List<FormLogin>formLoginList = new LinkedList<>();
         try {
-            PreparedStatement ps = con.prepareStatement(dbConstant.DISPLAY_ALL_USER);
+            PreparedStatement ps = con.prepareStatement(DBConstant.DISPLAY_ALL_USER);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 int id = (rs.getInt(1));

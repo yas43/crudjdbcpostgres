@@ -38,8 +38,13 @@ public class FormLoginController {
         return formLoginService.displayAllUser();
     }
 
-    @PostMapping("/{id}")
-    public boolean isUserExist(@PathVariable("id")Integer id){
-        return formLoginService.isUserExist(id);
+    @PostMapping("/findById/{id}")
+    public FormLogin findById(@PathVariable("id")Integer id){
+        return formLoginService.findById(id);
+    }
+
+    @PostMapping("/findByEmail/{email}")
+    public FormLogin findByEmail(@PathVariable("email") String email){
+        return formLoginService.findByEmail(email);
     }
 }
